@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 3
+
+int i, ch, queue[MAX], rear = -1, front = -1, item;
+
+void insert();
+void delete();
+void display();
+
+int main() {
+    while (1) {
+        printf("Enter the element to be performed\n");
+        printf("\n 1.insert\n 2.delete\n 3.display\n 4.exit\n");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1:
+                insert();
+                break;
+            case 2:
+                delete();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
+
+void insert() {
+    if (rear == MAX - 1) {
+        if (front == 0) {
+            printf("Overflow!!\n");
+            return;
+        } else { // Reset if front has wrapped around
+            front = 0;
+            rear = -1; // Reset rear for circular behavior
+        }
+    }
+
+    printf("The element need to be inserted: ");
+    scanf("%d", &item);
+
+    rear++;
+    queue[rear] = item; // Store the input item in the queue
+
+    if (front == -1) { // First insertion
+        front = 0;
+    }
+}
+
+void delete() {
+    if (front == -1 || front > rear) {
+        printf("Queue is underflow\n");
+        return;
+    } else {
+        printf("The element deleted is: %d\n", queue[front]); // Correctly print the deleted element
+        front++;
+    }
+
+    // Reset the queue if it becomes empty
+    if (front > rear) {
+        front = rear = -1; // Reset the queue
+    }
+}
+
+void display() {
+    if (front == -1 || front > rear) {
+        printf("Queue is empty\n");
+    } else {
+        printf("The elements in the queue are:\n");
+        for (int i = front; i <= rear; i++) {
+            printf("%d\n", queue[i]);
+        }
+    }
+}
