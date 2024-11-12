@@ -1,0 +1,180 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *link;
+};
+
+typedef struct Node node;
+
+node *start = NULL;
+
+void create();
+void display();
+void insert_beg();
+void insert_end();
+void insert_req();
+
+int main() {
+    int ch;
+    while(1) {
+        printf("1: Create\n2: Insert at beginning\n3: Insert at end\n4: Insert at required position\n5: Display\n6: Exit\n");
+        scanf("%d", &ch);
+        switch(ch) {
+            case 1:
+                create();
+                break;
+            case 2:
+                insert_beg();
+                break;
+            case 3:
+                insert_end();
+                break;
+            case 4:
+                insert_req();
+                break;
+            case 5:
+                display();
+                break;
+            case 6:
+                exit(0);
+                break;
+            default:
+                printf("Invalid choice, try again!\n");
+        }
+    }
+}
+
+void create() {
+    node *new1, *curr;
+    char cont = 'Y';  // Initialize the variable to enter the loop
+
+    do {
+        new1 = (node*)malloc(sizeof(node));
+        if (new1 == NULL) {
+            printf("Memory allocation failed!\n");
+            return;
+        }
+
+        printf("Enter value: ");
+        scanf("%d", &new1->data);
+
+        new1->link = NULL;
+
+        if (start == NULL) {
+            start = new1;
+        } else {
+            curr->link = new1;
+        }
+        curr = new1;
+
+        printf("Do you want to add another element (Y/N)? ");
+        scanf(" %c", &cont);  // Note the space before %c to handle newline from previous input
+
+    } while (cont == 'y' || cont == 'Y');
+}
+
+void insert_beg() {
+    node *new1 = (node*)malloc(sizeof(node));
+    if (new1 == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter the element that needs to be added: ");
+    scanf("%d", &new1->data);
+
+    if (start == NULL) {
+        start = new1;
+        new1->link = NULL;
+    } else {
+        new1->link = start;
+        start = new1;
+    }
+}
+
+void insert_end() {
+    node *new1 = (node*)malloc(sizeof(node));
+    node *temp;
+
+    if (new1 == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter the element that needs to be added at the end: ");
+    scanf("%d", &new1->data);
+
+    new1->link = NULL;
+
+    if (start == NULL) {
+        start = new1;
+    } else {
+        temp = start;
+        while (temp->link != NULL) {
+            temp = temp->link;  // Traverse to the last node
+        }
+        temp->link = new1;
+    }
+}
+
+void insert_req() {
+    int pos;
+    node *new1 = (node*)malloc(sizeof(node));
+    node *temp;
+
+    if (new1 == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter the element that needs to be added: ");
+    scanf("%d", &new1->data);
+
+    new1->link = NULL;
+
+    printf("Enter the position where you want to insert the element: ");
+    scanf("%d", &pos);
+
+    // If inserting at the beginning
+    if (pos == 1) {
+        new1->link = start;
+        start = new1;
+        return;
+    }
+
+    // Traverse to the position
+    temp = start;
+    for (int i = 1; temp != NULL && i < pos - 1; i++) {
+        temp = temp->link;
+    }
+
+    // If position is invalid (greater than the list length)
+    if (temp == NULL) {
+        printf("Position is out of bounds.\n");
+        free(new1);
+        return;
+    }
+
+    // Insert the node at the required position
+    new1->link = temp->link;
+    temp->link = new1;
+}
+
+void display() {
+    node *temp = start;
+
+    if (temp == NULL) {
+        printf("Linked list is empty\n");
+        return;
+    }
+
+    printf("Elements in the list: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->link;
+    }
+    printf("\n");
+}
+ 
