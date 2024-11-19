@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for singly linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Stack Operations:
+
+// Function to push an element onto the stack
+void push(struct Node** top, int data) {
+    struct Node* newNode = createNode(data);
+    newNode->next = *top;  // Point new node to the current top
+    *top = newNode;        // Update the top to the new node
+}
+
+// Function to pop an element from the stack
+int pop(struct Node** top) {
+    if (*top == NULL) {
+        printf("Stack is empty!\n");
+        return -1;  // Indicate stack underflow
+    }
+    struct Node* temp = *top;
+    int poppedData = temp->data;
+    *top = (*top)->next;  // Update top to the next node
+    free(temp);           // Free the popped node
+    return poppedData;
+}
+
+// Function to display the stack
+void displayStack(struct Node* top) {
+    if (top == NULL) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    struct Node* temp = top;
+    printf("Stack: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Queue Operations:
+
+// Function to enqueue an element into the queue
+void enqueue(struct Node** front, struct Node** rear, int data) {
+    struct Node* newNode = createNode(data);
+    if (*rear == NULL) {
+        *front = *rear = newNode;  // If queue is empty, both front and rear point to the new node
+        return;
+    }
+    (*rear)->next = newNode;  // Link the last node to the new node
+    *rear = newNode;          // Update rear to the new node
+}
+
+// Function to dequeue an element from the queue
+int dequeue(struct Node** front) {
+    if (*front == NULL) {
+        printf("Queue is empty!\n");
+        return -1;  // Indicate queue underflow
+    }
+    struct Node* temp = *front;
+    int dequeuedData = temp->data;
+    *front = (*front)->next;  // Update front to the next node
+    free(temp);                // Free the dequeued node
+    return dequeuedData;
+}
+
+// Function to display the queue
+void displayQueue(struct Node* front) {
+    if (front == NULL) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    struct Node* temp = front;
+    printf("Queue: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    struct Node* stackTop = NULL;  // Initialize stack as empty
+    struct Node* queueFront = NULL; // Initialize queue front as empty
+    struct Node* queueRear = NULL;  // Initialize queue rear as empty
+    int choice, data;
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Push onto Stack\n");
+        printf("2. Pop from Stack\n");
+        printf("3. Display Stack\n");
+        printf("4. Enqueue into Queue\n");
+        printf("5. Dequeue from Queue\n");
+        printf("6. Display Queue\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the data to push onto the stack: ");
+                scanf("%d", &data);
+                push(&stackTop, data);
+                break;
+            case 2:
+                data = pop(&stackTop);
+                if (data != -1) {
+                    printf("Popped from stack: %d\n", data);
+                }
+                break;
+            case 3:
+                displayStack(stackTop);
+                break;
+            case 4:
+                printf("Enter the data to enqueue into the queue: ");
+                scanf("%d", &data);
+                enqueue(&queueFront, &queueRear, data);
+                break;
+            case 5:
+                data = dequeue(&queueFront);
+                if (data != -1) {
+                    printf("Dequeued from queue: %d\n", data);
+                }
+                break;
+            case 6:
+                displayQueue(queueFront);
+                break;
+            case 7:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    return 0;
+}
