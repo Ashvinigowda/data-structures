@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+typedef struct Node node;
+
+
+node* create_node(int data) {
+    node* new_node = (node*)malloc(sizeof(node));
+    new_node->data = data;
+    new_node->left = NULL;
+    new_node->right = NULL;
+    return new_node;
+}
+
+
+node* insert_bst(node* root, int data) {
+    // If the tree is empty, return a new node
+    if (root == NULL) {
+        return create_node(data);
+    }
+
+ 
+    if (data < root->data) {
+        root->left = insert_bst(root->left, data);
+    } else if (data > root->data) {
+        root->right = insert_bst(root->right, data);
+    }
+
+
+    return root;
+}
+
+
+void inorder(node* root) {
+    if (root != NULL) {
+        inorder(root->left);      
+        printf("%d ", root->data);
+        inorder(root->right);     
+    }
+}
+
+// Function for preorder traversal (Root, Left, Right)
+void preorder(node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data); 
+        preorder(root->left);      
+        preorder(root->right);     
+    }
+}
+
+
+void postorder(node* root) {
+    if (root != NULL) {
+        postorder(root->left);    
+        postorder(root->right);    
+        printf("%d ", root->data); 
+    }
+}
+
+
+void display_tree(node* root) {
+    printf("\nIn-order Traversal: ");
+    inorder(root);
+    printf("\n");
+
+    printf("\nPre-order Traversal: ");
+    preorder(root);
+    printf("\n");
+
+    printf("\nPost-order Traversal: ");
+    postorder(root);
+    printf("\n");
+}
+
+
+int main() {
+    node* root = NULL;
+    int choice, value;
+
+    while (1) {
+        printf("\nBinary Search Tree Operations:\n");
+        printf("1. Insert a node\n");
+        printf("2. Display the tree (In-order, Pre-order, Post-order)\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the value to insert: ");
+                scanf("%d", &value);
+                root = insert_bst(root, value);
+                break;
+            case 2:
+                display_tree(root);
+                break;
+            case 3:
+                printf("Exiting the program.\n");
+                exit(0);
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
